@@ -1,0 +1,155 @@
+version: '2'
+services:
+
+  kafka-orion-gateway:
+    container_name: kafka-orion-gateway
+    image: registry.gitlab.com/isteps-sps-lab/human-robot-interaction/better-factory/kafka-orion-gateway:0.1.4
+    environment:
+      ORION_BROKER: http://orion:1026/
+      ORION_GATEWAY_ENDPOINT: http://kafka-orion-gateway:8080
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: middleware:9092
+      SPRING_KAFKA_PROPERTIES_BASIC_AUTH_CREDENTIALS_SOURCE: USER_INFO
+      SPRING_KAFKA_PROPERTIES_BASIC_AUTH_USER_INFO: $BF_USER:$BF_PASSWORD
+      SPRING_KAFKA_PROPERTIES_SCHEMA_REGISTRY_URL: http://middleware:8081
+    depends_on:
+      - middleware
+      - orion
+
+  fams:
+    container_name: fams
+    image: registry.gitlab.com/isteps-sps-lab/human-robot-interaction/better-factory/stre:0.4
+    environment:
+      DELAY_THRESHOLD: 2
+      DIGITAL_WORKPLACE_URL: http://models:8080/rest
+      INPUT_TOPIC: EU_HUMANMANUFACTURING_STREIN
+      MIDDLEWARE_URL: middleware:9092
+      MODEL_FILE: /exec/data/STRE_Dummy
+      OUTPUT_TOPIC: EU_HUMANMANUFACTURING_STREOUT
+      SCHEMA_REGISTRY_PASSWORD: $BF_PASSWORD
+      SCHEMA_REGISTRY_URL: http://middleware:8081
+      SCHEMA_REGISTRY_USERNAME: $BF_USER
+      SCHEMA_TYP: EU_HUMANMANUFACTURING_STREOUT
+      SLIDING_DURATION: 60
+      WINDOW_DURATION: 60
+    restart: on-failure:10
+    volumes:
+      - fams_data:/exec/data:rw
+    depends_on:
+      - middleware
+      - models
+
+  im:
+    container_name: im
+    image: registry.gitlab.com/isteps-sps-lab/human-robot-interaction/better-factory/im:0.1
+    environment:
+      DIGITAL_WORKPLACE_PASSWORD: $BF_PASSWORD
+      DIGITAL_WORKPLACE_URL: http://models:8080/rest
+      DIGITAL_WORKPLACE_USERNAME: $BF_USER
+      INTERVENTION_REPOSITORY_FILE: data/interventions.xml
+      KAFKA_URL: middleware:9092
+      OUTPUT_PAYLOAD: Intervention
+      OUTPUT_TOPIC: EU_HUMANMANUFACTURING_INTERVENTION
+      SCHEMA_REGISTRY_URL: http://middleware:8081
+      SOURCE: InterventionManager
+      TIMEOUT: 10
+    ports:
+      - 8666:8666
+    restart: on-failure:10
+    volumes:
+      - ./init-data/interventions:/exec/data:rw
+    depends_on:
+      - middleware
+      - models
+
+  kafka-message-model:
+    container_name: kafka-message-model
+    image: registry.gitlab.com/isteps-sps-lab/human-robot-interaction/better-factory/kafka-message-model:0.1
+    restart: on-failure
+    volumes:
+      - message_model:/schemas:rw
+
+  middleware:
+    container_name: middleware
+    image: registry.gitlab.com/isteps-sps-lab/human-robot-interaction/better-factory/middleware:0.1
+    environment:
+      ADV_HOST: middleware
+      BROKER_PORT: 9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://middleware:9092
+      PASSWORD: $BF_PASSWORD
+      REGISTRY_PORT: 8081
+      REST_PORT: 8082
+      USER: $BF_USER
+      WEB_PORT: 3040
+      ZK_PORT: 3181
+    ports:
+      - 3040:3040
+    restart: on-failure
+    volumes:
+      - message_model:/schemas:rw
+    depends_on:
+      - kafka-message-model
+
+  models:
+    container_name: models
+    image: registry.gitlab.com/complemant/integration/data-models:latest
+    environment:
+      ADMIN_PASSWORD: $BF_PASSWORD
+      ADMIN_USERNAME: $BF_USER
+      INIT_DATA_DIRECTORY: /var/human/init-data
+      KAFKA_REST_PASSWORD: $BF_PASSWORD
+      KAFKA_REST_URL: http://middleware:8082
+      KAFKA_REST_USER: $BF_USER
+      KAFKA_URL: middleware:9092
+      KARKA_CLIENT_ID: models
+      KARKA_GROUP_ID: models
+      MQTT_HOST: sensing-layer_mosquitto
+      MQTT_PASSWORD: $BF_PASSWORD
+      MQTT_PORT: 1883
+      MQTT_USER: $BF_USER
+      MYSQL_DB: $MODELS_MYSQL_DATABASE
+      MYSQL_HOST: models_db
+      MYSQL_PASS: $BF_PASSWORD
+      MYSQL_PORT: 3306
+      MYSQL_USER: $BF_USER
+      SCHEMA_REGISTRY_PASSWORD: $BF_PASSWORD
+      SCHEMA_REGISTRY_URL: http://middleware:8081
+      SCHEMA_REGISTRY_USER: $BF_USER
+      ZOOKEEPER_URL: zookeeper:3181
+      spring_profiles_active: kafka
+    restart: on-failure
+    volumes:
+      - ./init-data:/var/human/init-data:rw
+    depends_on:
+      - middleware
+      - models_db
+
+  models_db:
+    container_name: models-db
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: $MODELS_MYSQL_ROOT_PASSWORD
+      MYSQL_DATABASE: $MODELS_MYSQL_DATABASE
+      MYSQL_USER: $BF_USER
+      MYSQL_PASSWORD: $BF_PASSWORD
+    restart: on-failure
+    volumes:
+      - models_db_data:/var/lib/mysql:rw
+
+  mongo:
+    container_name: mongo
+    image: mongo:4.4
+    command: --nojournal
+
+  orion:
+    container_name: orion
+    image: fiware/orion:3.1.0
+    ports:
+      - 1026:1026
+    command: -dbhost mongo -corsOrigin __ALL -inReqPayloadMaxSize 2097152
+    depends_on:
+      - mongo
+
+volumes:
+  message_model:
+  models_db_data:
+  fams_data:
