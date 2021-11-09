@@ -32,6 +32,9 @@ A specific service subscribes a set of predefined topics in KB, then converts th
 
 At the same time, a REST controller is defined to receive notifications from OCB. All the notifications are converted into an Avro-serializable object and forwarded to dedicated KB topics.
 
+### consensus
+The *consensus* component downloads the worker responses collected with the "Consensus" questionnaire (GForm). Each response contains static data about the worker, which are pushed to the *models* component by means of its REST API. A cron job is exploited to download new responses.
+
 ### Dependencies
 
 #### middleware
@@ -92,16 +95,21 @@ We suggest the user to only modify variables listed in the `.env` file, if neede
 
 | Parameter name             | Parameter value | Default |
 | -------------------------- | --------------- | ------  |
-| BF_USER | A username shared by all the components | **bf** |
-| BF_PASSWORD | A password shared by all the components | **bf123** |
+| BF_USER | A username shared by all the components | **bfuser** |
+| BF_PASSWORD | A password shared by all the components | **bfpwd123** |
 | MODELS_MYSQL_DATABASE | Name of the database to store the shared model | **models**|
 | MODELS_MYSQL_ROOT_PASSWORD | Password for the root user in MySQL | **root** |
+| CREDENTIALS | A JSON file containing the Google Service account credentials to access the GForm responses. | **/app/service_account.json** |
+| SPREADSHEET | The name of the Google Spreadsheet containing the GForm responses. | **[BF] Worker Profiling (Risposte)** |
+| FIELDS_MAP | A JSON file providing the mapping between the GForm questions and the ConsensusWorker parameters | **/app/fields_map.json** |
 
 > NOTE: this repo contains submodules. Please run the following commands to fetch the submodules content, if needed:
 ```bash
 git submodule init
 git submodule update
 ```
+
+> NOTE: To download responses from the Google Spreadsheet, a JSON file containing the user credentials is needed. The file will be provided upon request.
 
 Run the **up** command to start all the containers:
 

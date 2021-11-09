@@ -10,3 +10,6 @@
 	path = bf-kafka-orion-gateway
 	url = https://github.com/isteps-sps-lab/bf-kafka-orion-gateway
 	branch = main
+[submodule "bf-consensus"]
+	path = bf-consensus
+	url = git@github.com:isteps-sps-lab/bf-consensus.git
