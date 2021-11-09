@@ -6,7 +6,7 @@ The repository contains a partial deployment involving some of the Cognitive Hum
 
 The blue-colored components represent the core components for which SUPSI provides and maintains a Docker image; the other components (grey- and green-colored) represent dependencies that are provided as Docker images by third parties.
 
-> NOTE: In this deployment version, the only external dependencies that is available only in a private registry is *models*. The *models* image is provided and maintained by Holonix (HLX) within the Better Factory project.
+> NOTE: In this deployment version, the only external dependencies that is available only in a private registry is *models*. The *models* image is provided and maintained by Holonix (HOL) within the Better Factory project.
 
 ## Core Components
 
@@ -81,13 +81,13 @@ While some images are publicly available, some other require credentials to be d
 
 Once you are provided with a username and a token, you can issue the following command to login to the private GitLab Docker registry and download the images:
 
-```shell
+```bash
 docker login registry.example.com -u <username> -p <token>
 docker-compose pull
 ```
 
 ### Usage
-The docker-compose file automatically runs all the components as Docker containers. Each container can be customized by editing its environment parameters. The current deployment already set the right values for all the parameters.
+We use Docker Compose to automatically runs all the components as Docker containers. Each container can be customized by editing its environment parameters. The current deployment already set the right values for all the parameters.
 We suggest the user to only modify variables listed in the `.env` file, if needed.
 
 | Parameter name             | Parameter value | Default |
@@ -97,10 +97,16 @@ We suggest the user to only modify variables listed in the `.env` file, if neede
 | MODELS_MYSQL_DATABASE | Name of the database to store the shared model | **models**|
 | MODELS_MYSQL_ROOT_PASSWORD | Password for the root user in MySQL | **root** |
 
+> NOTE: this repo contains submodules. Please run the following commands to fetch the submodules content, if needed:
+```bash
+git submodule init
+git submodule update
+```
+
 Run the **up** command to start all the containers:
 
-```shell
-docker-compose up -d
+```bash
+docker-compose -f bf-fams/docker-compose.yml -f bf-im/docker-compose.yml -f bf-kafka-orion-gateway/docker-compose.yml up -d
 ```
 
 You can now access different components:
@@ -111,7 +117,7 @@ You can now access different components:
 
 - Orion is available at [localhost:1026](http://localhost:1026/) and can be queried using its [API](https://fiware-orion.readthedocs.io/en/1.13.0/user/walkthrough_apiv2/index.html). For example, the following query retrieves all the entities stored to the current Orion instance:
 
-```shell
+```bash
 curl localhost:1026/v2/entities -s -S -H 'Accept: application/json' | python -mjson.tool
 ```
 

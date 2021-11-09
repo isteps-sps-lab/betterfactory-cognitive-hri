@@ -1,0 +1,12 @@
+[submodule "bf-fams"]
+	path = bf-fams
+	url = https://github.com/isteps-sps-lab/bf-fams
+	branch = main
+[submodule "bf-im"]
+	path = bf-im
+	url = https://github.com/isteps-sps-lab/bf-im
+	branch = main
+[submodule "bf-kafka-orion-gateway"]
+	path = bf-kafka-orion-gateway
+	url = https://github.com/isteps-sps-lab/bf-kafka-orion-gateway
+	branch = main
