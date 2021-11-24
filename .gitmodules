@@ -10,3 +10,7 @@
 	path = bf-kafka-orion-gateway
 	url = https://github.com/isteps-sps-lab/bf-kafka-orion-gateway
 	branch = main
+[submodule "bf-worker-data-importer"]
+	path = bf-worker-data-importer
+	url = https://github.com/isteps-sps-lab/bf-worker-data-importer
+	branch = main

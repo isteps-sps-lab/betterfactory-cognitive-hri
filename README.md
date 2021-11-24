@@ -32,8 +32,8 @@ A specific service subscribes a set of predefined topics in KB, then converts th
 
 At the same time, a REST controller is defined to receive notifications from OCB. All the notifications are converted into an Avro-serializable object and forwarded to dedicated KB topics.
 
-### consensus
-The *consensus* component downloads the worker responses collected with the "Consensus" questionnaire (GForm). Each response contains static data about the worker, which are pushed to the *models* component by means of its REST API. A cron job is exploited to download new responses.
+### worker-data-importer
+The *worker-data-importer* component downloads the worker responses collected with the "Consensus" questionnaire (GForm). Each response contains static data about the worker, which are pushed to the *models* component by means of its REST API. A cron job is exploited to download new responses.
 
 ### Dependencies
 
@@ -114,7 +114,7 @@ git submodule update
 Run the **up** command to start all the containers:
 
 ```bash
-docker-compose -f bf-fams/docker-compose.yml -f bf-im/docker-compose.yml -f bf-kafka-orion-gateway/docker-compose.yml up -d
+docker-compose -f bf-fams/docker-compose.yml -f bf-im/docker-compose.yml -f bf-kafka-orion-gateway/docker-compose.yml -f bf-worker-data-importer/docker-compose.yml up -d
 ```
 
 You can now access different components:
