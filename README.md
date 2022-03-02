@@ -172,12 +172,7 @@ git submodule update
 Run the **up** command to start all the containers:
 
 ```bash
-docker-compose \
-  -f bf-worker-data-importer/docker-compose.yml \
-  -f bf-fams/docker-compose.yml \
-  -f bf-im/docker-compose.yml \
-  -f bf-kafka-orion-gateway/docker-compose.yml \
-  up -d
+docker-compose up -d
 ```
 
 You can now access different components:
