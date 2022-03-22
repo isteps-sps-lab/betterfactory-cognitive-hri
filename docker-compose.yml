@@ -68,7 +68,7 @@ services:
       SPRING_KAFKA_PROPERTIES_BASIC_AUTH_CREDENTIALS_SOURCE: USER_INFO
       SPRING_KAFKA_PROPERTIES_BASIC_AUTH_USER_INFO: $BF_USER:$BF_PASSWORD
       SPRING_KAFKA_PROPERTIES_SCHEMA_REGISTRY_URL: http://middleware:8081
-    image: registry.gitlab.com/isteps-sps-lab/human-robot-interaction/better-factory/kafka-orion-gateway:0.1.4
+    image: registry.gitlab.com/isteps-sps-lab/human-robot-interaction/better-factory/kafka-orion-gateway:0.1.6
   middleware:
     container_name: middleware
     depends_on:
