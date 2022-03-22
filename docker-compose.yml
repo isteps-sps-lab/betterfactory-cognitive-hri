@@ -122,7 +122,7 @@ services:
       SCHEMA_REGISTRY_USER: $BF_USER
       ZOOKEEPER_URL: zookeeper:3181
       spring_profiles_active: kafka
-    image: registry.gitlab.com/humanufacturing/integration/data-models:1.3
+    image: registry.gitlab.com/complemant/integration/data-models:latest
     restart: on-failure
     volumes:
     - ./volumes/init-data:/var/human/init-data:rw
