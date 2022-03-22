@@ -1,0 +1,36 @@
+<interventionRepository>
+   <interventions class="java.util.ArrayList">
+      <intervention effectiveness="100.0" id="64fb7593-93ab-4846-be2c-dcdcb54556a1" description="Assistance Level 0">
+         <DynamicParameterInRangeCondition>
+            <dynamicParameterName>Fatigue</dynamicParameterName>
+            <lowerBound>-1.0</lowerBound>
+            <upperBound>1.0</upperBound>
+         </DynamicParameterInRangeCondition>
+         <command>Assistancelevel:0</command>
+      </intervention>
+      <intervention effectiveness="100.0" id="593bb704-55bc-461c-90fc-667c3dd5ad08" description="Assistance Level 1">
+         <DynamicParameterInRangeCondition>
+            <dynamicParameterName>Fatigue</dynamicParameterName>
+            <lowerBound>1.0</lowerBound>
+            <upperBound>1.5</upperBound>
+         </DynamicParameterInRangeCondition>
+         <command>Assistancelevel:1</command>
+      </intervention>
+      <intervention effectiveness="100.0" id="4d22aaaa-8535-439d-8384-aae48156fc8a" description="Simulate">
+         <DynamicParameterInRangeCondition>
+            <dynamicParameterName>Fatigue</dynamicParameterName>
+            <lowerBound>0.0</lowerBound>
+            <upperBound>10.0</upperBound>
+         </DynamicParameterInRangeCondition>
+         <command>execute</command>
+      </intervention>
+      <intervention effectiveness="100.0" id="aba97196-9fde-4d04-bd29-feb60583ed37" description="Break">
+         <DynamicParameterInRangeCondition>
+            <dynamicParameterName>Fatigue</dynamicParameterName>
+            <lowerBound>1.5</lowerBound>
+            <upperBound>2.5</upperBound>
+         </DynamicParameterInRangeCondition>
+         <command>Break</command>
+      </intervention>
+   </interventions>
+</interventionRepository>

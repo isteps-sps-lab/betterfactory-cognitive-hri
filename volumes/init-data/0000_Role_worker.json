@@ -1,0 +1,26 @@
+{
+	"Role": {
+		"id": "c938bbe5-bc49-4156-a0c2-c5e79c4a7ca7",
+		"name": "worker",
+		"level": 1,
+		"operations": [
+			"READ_JOB",
+			"READ_JOB_SCHEDULE",
+			"READ_PETRINET",
+			"READ_TASK",
+			"READ_WORKER",
+			"START_JOB_SCHEDULED",
+			"STOP_JOB_SCHEDULED",
+			"BREAK_JOB_SCHEDULED",
+			"READ_WORKSTATION",
+			"LOGIN_NO_PASS",
+			"UPDATE_SIMULATION",
+			"CREATE_SIMULATION",
+			"READ_SIMULATION",
+			"UPDATE_ASSESSMENT",
+			"CREATE_ASSESSMENT",
+			"READ_ASSESSMENT",
+			"CREATE_DEVICEASSIGNMENT"
+		]
+	}
+}

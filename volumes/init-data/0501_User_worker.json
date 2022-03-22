@@ -1,0 +1,94 @@
+{
+	"User": {
+		"id": "e208ea50-b297-11e8-96f8-529269fb1459",
+		"username": "worker",
+		"password": "knx0SWlnAppu0FHsFaQqg7UepbEj1lYevc0ChNDOlT4=",
+		"email": "worker@myfactory.com",
+		"firstName": "worker",
+		"lastName": "worker",
+		"roles": [
+			"c938bbe5-bc49-4156-a0c2-c5e79c4a7ca7"
+		],
+		"worker": {
+			"id":"6090d8ff-c423-4ea9-9c1d-cff4bb818107",
+			"gender": "Male",
+			"smoker": "Yes",
+			"birthdate": 1556110203978,
+			"hiringDate": 1556116203978,
+			"workingPosition": "Variable",
+			"bodyMeasures": [{
+				"description": "weight",
+				"name": "weight",
+				"value": 80,
+				"unit": "898e08ee-10da-4eef-99b6-25e1cf346a6f"
+			}, {
+				"description": "height",
+				"name": "height",
+				"value": 1.80,
+				"unit": "a7164b12-b224-4781-b7da-ef3a95c14e43"
+			}, {
+				"description": "waistcircumference",
+				"name": "waistcircumference",
+				"value": 1,
+				"unit": "a7164b12-b224-4781-b7da-ef3a95c14e43"
+			}],
+			"features":[
+				{
+					"description": "gripstrength_left_avg",
+					"type": "DOUBLE",
+					"name": "grip_strength_left",
+					"value": "1.0"
+				},
+				{
+					"description": "gripstrength_left_std",
+					"type": "DOUBLE",
+					"name": "grip_strength_left_std",
+					"value": "1.0"
+				},
+				{
+					"description": "gripstrength_right_avg",
+					"type": "DOUBLE",
+					"name": "grip_strength_right",
+					"value": "1.0"
+				},
+				{
+					"description": "gripstrength_right_std",
+					"type": "DOUBLE",
+					"name": "grip_strength_right_std",
+					"value": "1.0"
+				},
+				{
+					"description": "OMPQ",
+					"type": "INTEGER",
+					"name": "OMPQ",
+					"value": "40"
+				},
+				{
+					"description": "job_experience",
+					"type": "STRING",
+					"name": "job_experience",
+					"value": "High"
+				},
+				{
+					"description": "Smoker",
+					"type": "STRING",
+					"name": "Smoker",
+					"value": "Yes"
+				},
+				{
+					"description": "Training_type",
+					"type": "STRING",
+					"name": "Training_intensity",
+					"value": "None"
+				},
+				{
+					"description": "Number_of_weekly_trainings",
+					"type": "INTEGER",
+					"name": "Number_of_weekly_trainings",
+					"value": "2"
+				}],
+			"jobExperiences":[],
+			"workerTraits" : []
+		}
+	}
+}

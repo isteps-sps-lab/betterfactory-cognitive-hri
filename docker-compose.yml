@@ -47,7 +47,7 @@ services:
       target: 8666
     restart: on-failure:10
     volumes:
-    - ./bf-im/init-data/interventions:/exec/data:rw
+    - ./volumes/init-data/interventions:/exec/data:rw
   kafka-message-model:
     container_name: kafka-message-model
     image: registry.gitlab.com/isteps-sps-lab/human-robot-interaction/better-factory/kafka-message-model:0.1
@@ -125,7 +125,7 @@ services:
     image: registry.gitlab.com/humanufacturing/integration/data-models:1.3
     restart: on-failure
     volumes:
-    - ./bf-im/init-data:/var/human/init-data:rw
+    - ./volumes/init-data:/var/human/init-data:rw
   models_db:
     container_name: models-db
     environment:
@@ -164,11 +164,10 @@ services:
       SPREADSHEET: $SPREADSHEET
     image: registry.gitlab.com/isteps-sps-lab/human-robot-interaction/better-factory/consensus:0.1.0
     volumes:
-    - ./bf-worker-data-importer/fields_map.json:/app/fields_map.json:rw
-    - ./bf-worker-data-importer/service_account.json:/app/service_account.json:rw
+    - ./volumes/fields_map.json:/app/fields_map.json:rw
+    - ./volumes/service_account.json:/app/service_account.json:rw
 version: '2'
 volumes:
   fams_data: {}
   message_model: {}
   models_db_data: {}
-
