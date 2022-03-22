@@ -161,11 +161,6 @@ file, if needed.
 | SPREADSHEET | The name of the Google Spreadsheet containing the GForm responses. | **[BF] Worker Profiling (Risposte)** |
 | FIELDS_MAP | A JSON file providing the mapping between the GForm questions and the ConsensusWorker parameters | **/app/fields_map.json** |
 
-> NOTE: this repo contains submodules. Please run the following commands to fetch the submodules content, if needed:
-```bash
-git submodule init
-git submodule update
-```
 
 > NOTE: To download responses from the Google Spreadsheet, a JSON file containing the user credentials is needed. The file will be provided upon request.
 
