@@ -196,5 +196,4 @@ curl localhost:1026/v2/entities -s -S -H 'Accept: application/json' | \
 ## Maintainers
 
 - Vincenzo Cutrona - vincenzo.cutrona@supsi.ch
-- Niko Bonomi - niko.bonomi@supsi.ch
 - Giuseppe Landolfi - giuseppe.landolfi@supsi.ch
