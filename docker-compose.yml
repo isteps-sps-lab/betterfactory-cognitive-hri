@@ -7,19 +7,21 @@ services:
       models:
         condition: service_started
     environment:
-      DELAY_THRESHOLD: 2
-      DIGITAL_WORKPLACE_URL: http://models:8080/rest
-      INPUT_TOPIC: EU_HUMANMANUFACTURING_STREIN
-      MIDDLEWARE_URL: middleware:9092
       MODEL_FILE: /exec/data/STRE_Dummy
-      OUTPUT_TOPIC: EU_HUMANMANUFACTURING_STREOUT
-      SCHEMA_REGISTRY_PASSWORD: $BF_PASSWORD
-      SCHEMA_REGISTRY_URL: http://middleware:8081
-      SCHEMA_REGISTRY_USERNAME: $BF_USER
-      SCHEMA_TYP: EU_HUMANMANUFACTURING_STREOUT
+      DELAY_THRESHOLD: 2
       SLIDING_DURATION: 60
       WINDOW_DURATION: 60
-    image: registry.gitlab.com/isteps-sps-lab/human-robot-interaction/better-factory/stre:0.4
+      DIGITAL_WORKPLACE_URL: http://models:8080/rest
+      DIGITAL_WORKPLACE_USER: $BF_USER
+      DIGITAL_WORKPLACE_PASSWORD: $BF_PASSWORD
+      MIDDLEWARE_URL: middleware:9092
+      INPUT_TOPIC: EU_HUMANMANUFACTURING_STREIN
+      OUTPUT_TOPIC: EU_HUMANMANUFACTURING_STREOUT
+      SCHEMA_REGISTRY_URL: http://middleware:8081
+      SCHEMA_REGISTRY_USERNAME: $BF_USER
+      SCHEMA_REGISTRY_PASSWORD: $BF_PASSWORD
+      SCHEMA_TYP: EU_HUMANMANUFACTURING_STREOUT
+    image: docker.ramp.eu/supsi-pvt/fatigue-monitoring-system:0.4.3
     restart: on-failure:10
     volumes:
     - fams_data:/exec/data:rw
@@ -41,7 +43,7 @@ services:
       SCHEMA_REGISTRY_URL: http://middleware:8081
       SOURCE: InterventionManager
       TIMEOUT: 10
-    image: registry.gitlab.com/isteps-sps-lab/human-robot-interaction/better-factory/im:0.1
+    image: docker.ramp.eu/supsi-pvt/intervention-manager:0.1.9
     ports:
     - published: 8666
       target: 8666
@@ -50,7 +52,7 @@ services:
     - ./volumes/init-data/interventions:/exec/data:rw
   kafka-message-model:
     container_name: kafka-message-model
-    image: registry.gitlab.com/isteps-sps-lab/human-robot-interaction/better-factory/kafka-message-model:0.1
+    image: docker.ramp.eu/supsi-pvt/kafka-message-model:0.1.0
     restart: on-failure
     volumes:
     - message_model:/schemas:rw
@@ -68,7 +70,7 @@ services:
       SPRING_KAFKA_PROPERTIES_BASIC_AUTH_CREDENTIALS_SOURCE: USER_INFO
       SPRING_KAFKA_PROPERTIES_BASIC_AUTH_USER_INFO: $BF_USER:$BF_PASSWORD
       SPRING_KAFKA_PROPERTIES_SCHEMA_REGISTRY_URL: http://middleware:8081
-    image: registry.gitlab.com/isteps-sps-lab/human-robot-interaction/better-factory/kafka-orion-gateway:0.1.6
+    image: docker.ramp.eu/supsi-pvt/kafka-bridge:0.1.7
   middleware:
     container_name: middleware
     depends_on:
@@ -84,7 +86,7 @@ services:
       USER: $BF_USER
       WEB_PORT: 3040
       ZK_PORT: 3181
-    image: registry.gitlab.com/isteps-sps-lab/human-robot-interaction/better-factory/middleware:0.1
+    image: docker.ramp.eu/supsi-pvt/middleware:0.1.1
     ports:
     - published: 3040
       target: 3040
@@ -96,7 +98,7 @@ services:
     depends_on:
       middleware:
         condition: service_started
-      models_db:
+      models-db:
         condition: service_started
     environment:
       ADMIN_PASSWORD: $BF_PASSWORD
@@ -113,7 +115,7 @@ services:
       MQTT_PORT: 1883
       MQTT_USER: $BF_USER
       MYSQL_DB: $MODELS_MYSQL_DATABASE
-      MYSQL_HOST: models_db
+      MYSQL_HOST: models-db
       MYSQL_PASS: $BF_PASSWORD
       MYSQL_PORT: 3306
       MYSQL_USER: $BF_USER
@@ -122,11 +124,13 @@ services:
       SCHEMA_REGISTRY_USER: $BF_USER
       ZOOKEEPER_URL: zookeeper:3181
       spring_profiles_active: kafka
-    image: registry.gitlab.com/complemant/integration/data-models:latest
+    image: docker.ramp.eu/betterfactory/data-models:1.0.0
     restart: on-failure
+    ports:
+      - "8080:8080"
     volumes:
     - ./volumes/init-data:/var/human/init-data:rw
-  models_db:
+  models-db:
     container_name: models-db
     environment:
       MYSQL_DATABASE: $MODELS_MYSQL_DATABASE
@@ -151,7 +155,7 @@ services:
     ports:
     - published: 1026
       target: 1026
-  worker_data_importer:
+  worker-data-importer:
     container_name: worker-data-importer
     depends_on:
       models:
@@ -159,10 +163,10 @@ services:
     environment:
       CRONTAB_SCHEDULE: '* */4 * * *'
       MODELS_PASSWORD: $BF_PASSWORD
-      MODELS_URL: $MODELS_URL
+      MODELS_URL: "http://models:8080/rest/"
       MODELS_USER: $BF_USER
-      SPREADSHEET: $SPREADSHEET
-    image: registry.gitlab.com/isteps-sps-lab/human-robot-interaction/better-factory/consensus:0.1.0
+      SPREADSHEET: "google spreadsheet name"
+    image: docker.ramp.eu/supsi-pvt/worker-data-importer:0.1.1
     volumes:
     - ./volumes/fields_map.json:/app/fields_map.json:rw
     - ./volumes/service_account.json:/app/service_account.json:rw

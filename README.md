@@ -5,20 +5,41 @@ Human Robot Interaction (C-HRI) scenario components, as defined within the
 Better Factory project. The deployment is provided by means of Docker Compose,
 and the set of initialized components is depicted in the picture here below:
 
-![docker-deployment](./docker-deployment.png)
+``` mermaid
+flowchart LR
+    classDef supsi fill:#B4C7DC,color:#000;
+    classDef pvt fill:#B2B2B2,color:#000;
+    classDef pub fill:#E8F2A1,color:#000;
 
-The blue-colored components represent the core components for which SUPSI
-provides and maintains a Docker image; the other components (grey- and
-green-colored) represent dependencies that are provided as Docker images by
-third parties.
+    subgraph SUPSI
+    direction TB
+    fams:::supsi <--> middleware:::supsi
+    im:::supsi <--> middleware:::supsi
+    kafka-message-model:::supsi --> middleware:::supsi
+    middleware:::supsi <--> kafka-orion-gateway:::supsi
+    worker-data-importer:::supsi
+    end
 
-> NOTE: In this deployment version, the only external dependencies that is
-> available only in a private registry is *models*. The *models* image is
-> provided and maintained by Holonix (HOL) within the Better Factory project.
+    subgraph Private Deps
+    models:::pvt <--> fams:::supsi
+    models:::pvt <--> im:::supsi
+    models:::pvt <--> worker-data-importer:::supsi
+    end
+
+    subgraph Public Deps
+    models:::pvt <--> models-db:::pub
+    kafka-orion-gateway:::supsi <--> orion:::pub
+    orion:::pub <--> mongo:::pub
+    end
+```
+
+The blue-colored components represent the core components for which SUPSI provides and maintains a Docker image; the other components represent Docker images that are either publicly available (green-colored) or maintened by other Better Factory partners (grey-colored).
+
+> NOTE: In this deployment version, all the Docker images but the public ones can be downloaded from the [RAMP Docker Registry](https://docker.ramp.eu/).
 
 ## Core Components
 
-### fams
+### fams ([docs](https://isteps-sps-lab.github.io/bf-fams/index.html))
 
 The *fams* component detects possible psychological (e.g., loss of attention,
 mental fatigue) or physical (e.g., tiredness) discomfort or harmful situations
@@ -36,7 +57,7 @@ of possible actions include:
 
 - shut-down all information
 
-### im
+### im ([docs](https://isteps-sps-lab.github.io/bf-im/index.html))
 
 The *im* component allows users to easily define intervention rules to
 orchestrate a production system. The component monitors the status of the
@@ -64,9 +85,9 @@ with the "Consensus" questionnaire (GForm). Each response contains static data
 about the worker, which are pushed to the *models* component by means of its
 REST API. A cron job is exploited to download new responses.
 
-### Dependencies
+## Dependencies
 
-#### middleware
+### middleware
 
 The image is based on the [fast-data-dev
 (v2.6.2)](https://github.com/lensesio/fast-data-dev/tree/fdd/2.6.2) project by
@@ -81,35 +102,31 @@ The middleware is run in secure mode and can be accessed at
 [localhost:3040](localhost:3040) (credentials are stored in the docker-compose
 file).
 
-#### kafka-message-model
+### kafka-message-model
 
 This component embeds the data model shared within the Better Factory project.
 The data model is automatically uploaded to the Schema Registry available within
 the *middleware*.
 
-
-#### orion
+### orion
 
 The *orion* component runs an instance of the Orion Context Broker (v3.1.0). It
 requires a MongoDB instance to use as storage system, which is provided by the
 *mongo* component.
 
-#### mongo
+### mongo
 
 The *mongo* component runs an official MongoDB docker image (v4.4).
 
 
-#### models
+### models
 
 The *models* component exposes a REST API to access the data model shared among
 all the components involved in the C-HRI scenario. The API is accessed by both
 the *fams* and *im* components to fetch information about workers and other
 factory elements.
 
-> NOTE: this image is available in a private Docker registry hosted at GitLab.
-> Please ask HOLONIX to get access to this image.
-
-#### models-db
+### models-db
 The *models-db* component runs an official MySql docker image (v5.7).
 
 ## How to Use
@@ -122,25 +139,26 @@ software is required:
 - Docker
 - Docker Compose
 
-We tested our deployment on a machine running Ubuntu 21, with Docker v20.10.8,
-and Docker Compose v1.29.2.
+We tested our deployment on machines running different configurations:
+- Ubuntu 21, Docker 20.10.8, Docker Compose 1.29.2
+- Ubuntu 22, Docker  24.0.5, Docker Compose 2.20.2
 
 ### Install
 
 Before running the containers, it is required to download the Docker images from
-their respective registries. While some images are publicly available, some
+the respective registries. While some images are publicly available, some
 other require credentials to be downloaded from private registries.
 
-> NOTE: Images provided by SUPSI can be download from the GitLab container
+> NOTE: Images can be download from the RAMP Docker
 > registry, which supports the token-based authentication. Please send your
-> request for a new token to the repository maintainers.
+> request for a new token to the RAMP Docker registry maintainers.
 
 Once you are provided with a username and a token, you can issue the following
-command to login to the private GitLab Docker registry and download the images:
+command to login to the RAMP Docker Registry and download the images:
 
 ```bash
-docker login registry.example.com -u <username> -p <token>
-docker-compose pull
+docker login docker.ramp.eu -u <username> -p <token>
+docker-compose pull <image>:<tag>
 ```
 
 ### Usage
