@@ -126,8 +126,6 @@ services:
       spring_profiles_active: kafka
     image: docker.ramp.eu/betterfactory/data-models:1.0.0
     restart: on-failure
-    ports:
-      - "8080:8080"
     volumes:
     - ./volumes/init-data:/var/human/init-data:rw
   models-db:
